@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+ 
+import com.nttdata.configurationservice.FeignClient.TableIdFeignClient;
 import com.nttdata.configurationservice.entity.Configuration;
 import com.nttdata.configurationservice.repository.ConfigurationRepository;
 import com.nttdata.configurationservice.service.ConfigurationService;
@@ -31,7 +33,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 	ConfigurationRepository configurationRepository;
 	@Autowired
 	RestTemplate restTemplate;
-
+	@Autowired
+	TableIdFeignClient tableIdFeignClient;
+	
 	@Value("${api.tableId-service.uri}")
 	String tableIdService;
 
@@ -48,6 +52,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		if (key >= 1) {
 			configuration.setIdConfiguration(key);
 			log.info("SAVE[product]:" + configuration.toString());
+		}else {
+			return Mono.error(new InterruptedException("Servicio no disponible:" + Configuration.class.getSimpleName()));
 		}
 		return configurationRepository.insert(configuration);
 	}
@@ -135,7 +141,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 	@Override
 	public Long generateKey(String nameTable) {
 		log.info(tableIdService + "/generateKey/" + nameTable);
-		ResponseEntity<Long> responseGet = restTemplate.exchange(tableIdService + "/generateKey/" + nameTable,
+		/*ResponseEntity<Long> responseGet = restTemplate.exchange(tableIdService + "/generateKey/" + nameTable,
 				HttpMethod.GET, null, new ParameterizedTypeReference<Long>() {
 				});
 		if (responseGet.getStatusCode() == HttpStatus.OK) {
@@ -143,6 +149,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			return responseGet.getBody();
 		} else {
 			return Long.valueOf(0);
-		}
+		}*/
+		return tableIdFeignClient.generateKey(nameTable);
 	}
 }

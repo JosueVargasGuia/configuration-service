@@ -1,6 +1,7 @@
 package com.nttdata.configurationservice.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collector;
@@ -51,6 +52,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		Long key = generateKey(Configuration.class.getSimpleName());
 		if (key >= 1) {
 			configuration.setIdConfiguration(key);
+			configuration.setCreationDate(Calendar.getInstance().getTime());
 			log.info("SAVE[product]:" + configuration.toString());
 		}else {
 			return Mono.error(new InterruptedException("Servicio no disponible:" + Configuration.class.getSimpleName()));
@@ -73,7 +75,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		 * .flatMap(objConfiguration -> { log.info("Update:[new]"+configuration
 		 * +" [Old]:"+objConfiguration); return
 		 * configurationRepository.save(configuration); });
-		 */
+		 */		
 		return configurationRepository.save(configuration);
 	}
 
@@ -106,21 +108,21 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			 */
 			// Ahorro: libre de comisión por mantenimiento y con un límite máximo de
 			// movimientos mensuales.
-			listaConfigurations.add(new Configuration(Long.valueOf(1), null, 5, null, null));
+			listaConfigurations.add(new Configuration(Long.valueOf(1), null, 5, null, null, null, null,  null, null,  null));
 			//  Cuenta corriente: posee comisión de mantenimiento y sin límite de
 			// movimientos mensuales.
-			listaConfigurations.add(new Configuration(Long.valueOf(2), 10.00, null, null, null));
+			listaConfigurations.add(new Configuration(Long.valueOf(2), 10.00, null, null, null, null, null,  null, null,  null));
 			//  Plazo fijo: libre de comisión por mantenimiento, solo permite un movimiento
 			// de retiro o depósito en un día específico del mes.
-			listaConfigurations.add(new Configuration(Long.valueOf(3), null, 1, null, "12"));
+			listaConfigurations.add(new Configuration(Long.valueOf(3), null, Integer.valueOf(1), "12", null, null, null,  null, null,  null));
 			//  Personal: solo se permite un solo crédito por persona.
-			listaConfigurations.add(new Configuration(Long.valueOf(4), null, null, 1, null));
+			listaConfigurations.add(new Configuration(Long.valueOf(4),  null, null, null, 1, null, null, null, null, null));
 			//  Empresarial: se permite más de un crédito por empresa.
-			listaConfigurations.add(new Configuration(Long.valueOf(5), null, null, null, null));
+			listaConfigurations.add(new Configuration(Long.valueOf(5), null, null, null, null, null, null,  null, null,  null));
 			//  Tarjeta de Crédito empresarial.
-			listaConfigurations.add(new Configuration(Long.valueOf(6), null, null, null, null));
+			listaConfigurations.add(new Configuration(Long.valueOf(6), null, null, null, null, null, null,  null, null,  null));
 			//  Tarjeta de Crédito empresarial.
-			listaConfigurations.add(new Configuration(Long.valueOf(7), null, null, null, null));
+			listaConfigurations.add(new Configuration(Long.valueOf(7), null, null, null, null, null, null,  null, null,  null));
 
 			maxValue = Long.valueOf(x);
 			return Flux.fromIterable(listaConfigurations).flatMap(configurations -> {

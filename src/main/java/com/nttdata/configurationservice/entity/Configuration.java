@@ -1,34 +1,43 @@
 package com.nttdata.configurationservice.entity;
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
 @Document(collection = "configuration")
 public class Configuration {
 	@Id
-	Long idConfiguration;
-	Double costMaintenance;// Costo de mantenimiento
-	Integer quantityMovement;// Total de movimientos
+	private Long idConfiguration;
+	private Double costMaintenance;// Costo de mantenimiento
+	private Integer quantityMovement;// Total de movimientos
+	private String specificDate;
 	// TypeMovement TypeMovement;//tipo
-	Integer quantityCredit;// Cantidad de movimientos permitidos, si solo permite un dia de moviento se
+	private Integer quantityCredit;// Cantidad de movimientos permitidos, si solo permite un dia de moviento se
 						// especifica fecha
-	String specificDate;
-	
-	@Override
-	public String toString() {
-		return "Configuration [idConfiguration=" + idConfiguration + ", costMaintenance=" + costMaintenance
-				+ ", quantityMovement=" + quantityMovement + ", quantityCredit=" + quantityCredit + ", specificDate="
-				+ specificDate + "]";
-	}
+	private Double minOpeningAmount;
+	private Double minDayAverageAmount;
+	private Double transactionFee;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss") 
+	private Date creationDate;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+	private Date dateModified;
+ 
 	
 	
 }

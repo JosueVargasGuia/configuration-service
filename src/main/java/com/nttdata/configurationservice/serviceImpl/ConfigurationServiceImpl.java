@@ -23,6 +23,7 @@ import com.nttdata.configurationservice.FeignClient.TableIdFeignClient;
 import com.nttdata.configurationservice.entity.Configuration;
 import com.nttdata.configurationservice.repository.ConfigurationRepository;
 import com.nttdata.configurationservice.service.ConfigurationService;
+ 
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -49,14 +50,21 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 	@Override
 	public Mono<Configuration> save(Configuration configuration) {
-		Long key = generateKey(Configuration.class.getSimpleName());
-		if (key >= 1) {
-			configuration.setIdConfiguration(key);
-			configuration.setCreationDate(Calendar.getInstance().getTime());
-			log.info("SAVE[product]:" + configuration.toString());
-		}else {
-			return Mono.error(new InterruptedException("Servicio no disponible:" + Configuration.class.getSimpleName()));
+		Long count = this.findAll().collect(Collectors.counting()).blockOptional().get();
+		Long idConfiguration;
+		if (count != null) {
+			if (count <= 0) {
+				idConfiguration = Long.valueOf(0);
+			} else {
+				idConfiguration = this.findAll().collect(Collectors.maxBy(Comparator.comparing(Configuration::getIdConfiguration)))
+						.blockOptional().get().get().getIdConfiguration();
+			}
+		} else {
+			idConfiguration = Long.valueOf(0);
+
 		}
+		configuration.setIdConfiguration(idConfiguration+1);
+		configuration.setCreationDate(Calendar.getInstance().getTime());
 		return configurationRepository.insert(configuration);
 	}
 

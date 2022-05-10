@@ -4,26 +4,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
- 
 import com.nttdata.configurationservice.FeignClient.TableIdFeignClient;
 import com.nttdata.configurationservice.entity.Configuration;
 import com.nttdata.configurationservice.repository.ConfigurationRepository;
 import com.nttdata.configurationservice.service.ConfigurationService;
- 
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -61,7 +54,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 			}
 		} else {
 			idConfiguration = Long.valueOf(0);
-
 		}
 		configuration.setIdConfiguration(idConfiguration+1);
 		configuration.setCreationDate(Calendar.getInstance().getTime());

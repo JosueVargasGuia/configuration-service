@@ -1,7 +1,9 @@
 package com.nttdata.configurationservice;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 import java.util.Calendar;
 
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -36,12 +39,14 @@ class ConfigurationServiceApplicationTests {
 	@Test
 	void addConfiguration() {
 		
-		Configuration configuration = new Configuration(10L,3.0,1,"20",1,20.0,100.0,2.5,Calendar.getInstance().getTime(),Calendar.getInstance().getTime());
-		//Mono<ResponseEntity<Configuration>> 
+		Configuration configuration = new Configuration(Long.valueOf(11),3.0,1,"20",1,20.0,100.0,2.5,null,null);
+		
 		when(configurationService.save(configuration)).thenReturn(Mono.just(configuration));
 		
 		webTestClient
 			.post().uri("/configuration")
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
 			.body(Mono.just(configuration),Configuration.class)
 			.exchange()
 			.expectStatus().isOk();
@@ -50,8 +55,6 @@ class ConfigurationServiceApplicationTests {
 	
 	@Test
 	void getConfigurationsTest() {
-		
-		//var null = Calendar.getInstance().getTime();
 		
 		Flux<Configuration> conFlux = Flux.just(
 				new Configuration(10L,3.0,1,"20",1,20.0,100.0,2.5,null,null),
@@ -96,21 +99,38 @@ class ConfigurationServiceApplicationTests {
 	}
 	
 	
-	@Test
+	/*@Test
 	void updateConfigurationTest() {
 		
-		Configuration configuration = new Configuration(11L,3.0,1,"20",1,20.0,100.0,2.5,Calendar.getInstance().getTime(),Calendar.getInstance().getTime());
-	
+		Configuration configuration = new Configuration(Long.valueOf(11),3.0,1,"20",1,20.0,100.0,2.5,null,null);
+		
 		when(configurationService.update(configuration)).thenReturn(Mono.just(configuration));
 		
 		webTestClient.put().uri("/configuration")
-		.body(Mono.just(configuration),Configuration.class)
-		.exchange()
-		.expectStatus().isOk();
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.body(Mono.just(configuration),Configuration.class)
+			.exchange()
+			.expectStatus().isOk();
+	}*/
+	
+	/*
+	@Test
+	void deleteConfgurationTest() {
+		
+		Configuration configuration = new Configuration(Long.valueOf(11),3.0,1,"20",1,20.0,100.0,2.5,null,null);
+		
+		when(configurationService.update(configuration))
+			.thenReturn(Mono.just(configuration));
+		
+		given(configurationService.delete(Long.valueOf(11)))
+			.willReturn(Mono.empty());
+		
+		webTestClient.delete().uri("/configuration/11")
+			.exchange()
+			.expectStatus()
+			.isNotFound();
+	
 	}
-	
-	
-	
-	
-
+	*/
 }

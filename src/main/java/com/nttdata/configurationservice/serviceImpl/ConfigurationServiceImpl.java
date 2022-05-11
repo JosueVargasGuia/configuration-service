@@ -60,6 +60,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 		return configurationRepository.insert(configuration);
 	}
 
+
 	@Override
 	public Mono<Configuration> findById(long idConfiguration) {
 		// TODO Auto-generated method stub

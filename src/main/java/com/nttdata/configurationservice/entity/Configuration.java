@@ -22,6 +22,7 @@ import lombok.Setter;
 @Data
 @Document(collection = "configuration")
 public class Configuration {
+
 	@Id
 	private Long idConfiguration;
 	private Double costMaintenance;// Costo de mantenimiento
@@ -29,15 +30,13 @@ public class Configuration {
 	private String specificDate;
 	// TypeMovement TypeMovement;//tipo
 	private Integer quantityCredit;// Cantidad de movimientos permitidos, si solo permite un dia de moviento se
-						// especifica fecha
+	// especifica fecha
 	private Double minOpeningAmount;
 	private Double minDayAverageAmount;
 	private Double transactionFee;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss") 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	private Date creationDate;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	private Date dateModified;
- 
-	
-	
+
 }

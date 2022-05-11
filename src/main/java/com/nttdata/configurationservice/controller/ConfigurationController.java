@@ -1,7 +1,5 @@
 package com.nttdata.configurationservice.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nttdata.configurationservice.entity.Configuration;
 import com.nttdata.configurationservice.service.ConfigurationService;
 
+import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Log4j2
 @RestController
 @RequestMapping("/configuration")
 public class ConfigurationController {
-	Logger log = LoggerFactory.getLogger(ConfigurationController.class);
+
+
 	@Autowired
 	ConfigurationService configurationService;
 
@@ -41,6 +42,7 @@ public class ConfigurationController {
 			return Mono.just(ResponseEntity.badRequest().build());
 		});
 	}
+	
 
 	@GetMapping("/{idConfiguration}")
 	public Mono<ResponseEntity<Configuration>> findById(@PathVariable(name = "idConfiguration") long idConfiguration) {
